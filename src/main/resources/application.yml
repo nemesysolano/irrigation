@@ -1,0 +1,20 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+  datasource:
+    url: jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driverClassName: org.hsqldb.jdbc.JDBCDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      database-platform: org.hibernate.dialect.HSQLDialect
+  show-sql: true
+
+logging:
+  level:
+    com.andela.irrigation.*: DEBUG
