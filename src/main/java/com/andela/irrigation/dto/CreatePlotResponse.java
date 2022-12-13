@@ -9,7 +9,6 @@ import lombok.experimental.FieldNameConstants;
 import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.util.Date;
 
 /**

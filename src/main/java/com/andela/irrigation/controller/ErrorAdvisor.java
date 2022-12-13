@@ -2,7 +2,7 @@ package com.andela.irrigation.controller;
 
 import com.andela.irrigation.dto.ErrorResponse;
 import com.andela.irrigation.service.NonExistingEntityError;
-import com.andela.irrigation.service.ServiceException;
+import com.andela.irrigation.ApplicationError;
 import com.andela.irrigation.service.ValidationError;
 import com.andela.irrigation.service.ConflictError;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class ErrorAdvisor {
-    ErrorResponse toErrorResponse(ServiceException cause) {
+    ErrorResponse toErrorResponse(ApplicationError cause) {
         return  ErrorResponse
             .builder()
             .message(cause.getMessage())
-            .code(cause.serviceExceptionCode.code)
+            .code(cause.serviceApplicationErrorCode.code)
             .errorMap(
-                    cause.errorMap.entrySet().stream().collect(
+                    cause.getErrorMap().entrySet().stream().collect(
                         Collectors.toMap(Map.Entry::getKey, e ->e.getValue().message
                     )
             ))
@@ -53,4 +53,13 @@ public class ErrorAdvisor {
         log.error("Operation failed because the request contained duplicated info", cause);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(value = {AsynchronousError.class})
+    public ResponseEntity<ErrorResponse> onAsynchronousError(AsynchronousError cause, WebRequest request) {
+        ErrorResponse message = toErrorResponse(cause);
+
+        log.error("Operation failed because an asynchronous operation failed.", cause);
+        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

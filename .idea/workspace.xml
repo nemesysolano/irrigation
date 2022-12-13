@@ -4,22 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="389f5f2c-e0ed-4786-8f26-16ac8450ae49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/GetPlotListResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/model/Sensor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ConflictError.java" afterDir="false" />
+    <list default="true" id="389f5f2c-e0ed-4786-8f26-16ac8450ae49" name="Changes" comment="Added asynchronous processing.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/configuration/AsyncConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/AsynchronousError.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/repository/SensorRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/SensorService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/ErrorAdvisor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/ErrorAdvisor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/ErrorResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/UpdatePlotResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/UpdatePlotResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ServiceExceptionCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ServiceExceptionCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/PlotController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/PlotController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/CreatePlotRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/CreatePlotRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/CreatePlotResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/CreatePlotResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/GetPlotResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/GetPlotResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/UpdatePlotRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/dto/UpdatePlotRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/model/Sensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/model/Sensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ConflictError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ConflictError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/NonExistingEntityError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/NonExistingEntityError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/PlotService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/PlotService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ServiceException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/ApplicationError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ServiceExceptionCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/ApplicationErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ValidationError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/ValidationError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/impl/PlotServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/impl/PlotServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/andela/irrigation/controller/PlotControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/andela/irrigation/controller/PlotControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/andela/irrigation/repository/PlotRepositoryTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/andela/irrigation/repository/PlotRepositoryTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,24 +66,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;538b1a3a2a9a124696eb5f197298d3e7&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "spring.configuration.checksum": "538b1a3a2a9a124696eb5f197298d3e7",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -86,7 +93,7 @@
       <recent name="com.andela.irrigation" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.PlotControllerTest.testReady">
+  <component name="RunManager" selected="JUnit.PlotControllerTest">
     <configuration default="true" type="AZURE_FUNCTION_SUPPORT" factoryName="Run Functions">
       <option name="appName" />
       <option name="appServicePlanName" />
@@ -205,10 +212,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.PlotControllerTest" />
         <item itemvalue="JUnit.PlotControllerTest.testReady" />
         <item itemvalue="JUnit.PlotRepositoryTest.testFindAllReturnsData" />
         <item itemvalue="JUnit.PlotRepositoryTest" />
-        <item itemvalue="JUnit.PlotControllerTest" />
         <item itemvalue="JUnit.PlotControllerTest.testUpdate" />
       </list>
     </recent_temporary>
@@ -230,29 +237,44 @@
       <workItem from="1670865932023" duration="13000" />
       <workItem from="1670877486297" duration="6635000" />
       <workItem from="1670884366693" duration="3211000" />
+      <workItem from="1670943041191" duration="11155000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added asynchronous processing." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added asynchronous processing." />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/PlotController.java</url>
-          <line>154</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/com/andela/irrigation/repository/PlotRepositoryTest.java</url>
           <line>41</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/PlotController.java</url>
-          <line>151</line>
-          <option name="timeStamp" value="21" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/andela/irrigation/controller/ErrorAdvisor.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/com/andela/irrigation/controller/PlotControllerTest.java</url>
+          <line>137</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/impl/PlotServiceImpl.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/andela/irrigation/service/impl/PlotServiceImpl.java</url>
+          <line>89</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

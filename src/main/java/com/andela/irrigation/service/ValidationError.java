@@ -1,5 +1,7 @@
 package com.andela.irrigation.service;
 
+import com.andela.irrigation.ApplicationErrorCode;
+import com.andela.irrigation.ApplicationError;
 import com.andela.irrigation.model.FieldError;
 
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.Map;
 /**
  * Use this class to flag errors founds in entity fields.
  */
-public class ValidationError extends ServiceException{
+public class ValidationError extends ApplicationError {
 
     /**
      *
@@ -15,6 +17,6 @@ public class ValidationError extends ServiceException{
      * @param errorMap Error map whose keys and values are respectively field names and error codes.
      */
     public ValidationError(Map<String, FieldError> errorMap) {
-        super(ServiceExceptionCode.DATA_INTEGRITY_ERROR, errorMap);
+        super(ApplicationErrorCode.DATA_INTEGRITY_ERROR, errorMap);
     }
 }

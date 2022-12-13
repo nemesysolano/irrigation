@@ -1,5 +1,6 @@
 package com.andela.irrigation.controller;
 
+import com.andela.irrigation.ApplicationError;
 import com.andela.irrigation.dto.*;
 import com.andela.irrigation.model.Plot;
 import com.andela.irrigation.service.PlotService;
@@ -16,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * <p>REST Interface to <code>com.andela.irrigation.service.PlotService</code> service.</p>
@@ -32,12 +35,12 @@ import java.util.List;
 })
 @Slf4j
 public class PlotController {
-    private static SimpleDateFormat TIME_FORMTTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     /**
      * <p>Mapper that converts DTOs into Plot instances.</p>
      */
     @Mapper
-    public static interface PlotMapper {
+    public interface PlotMapper {
 
         /**
          * Mapper instance.
@@ -110,7 +113,7 @@ public class PlotController {
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePlotResponse post(@RequestBody CreatePlotRequest request) {
         Plot plot = PlotMapper.MAPPER.toPlot(request);
-        return PlotMapper.MAPPER.toCreateResponse(plotService.create(plot));
+        return PlotMapper.MAPPER.toCreateResponse(fetchAsync(plotService.create(plot)));
     }
 
     @PutMapping("{plotId}")
@@ -121,7 +124,7 @@ public class PlotController {
             .toBuilder()
             .plotId(plotId)
             .build();
-        return PlotMapper.MAPPER.toUpdateResponse(plotService.update(plot));
+        return PlotMapper.MAPPER.toUpdateResponse(fetchAsync(plotService.update(plot)));
     }
 
     /**
@@ -131,7 +134,7 @@ public class PlotController {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        plotService.delete(id);
+        fetchAsync(plotService.delete(id));
     }
 
     /**
@@ -141,7 +144,7 @@ public class PlotController {
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public GetPlotResponse get(@PathVariable Long id) {
-        return PlotMapper.MAPPER.toGetResponse(plotService.findOrFail(id));
+        return PlotMapper.MAPPER.toGetResponse(fetchAsync(plotService.findOrFail(id)));
     }
 
     @GetMapping("ready/{time}")
@@ -149,17 +152,45 @@ public class PlotController {
     public GetPlotListResponse ready(
             @PathVariable("time") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time
     ) {
-        Date dateTime =timeToDateTime(time);
+        Date dateTime = timeToDateTime(time);
 
-        List<Plot> plotList = plotService.findByIrrigationTime(dateTime);
+        List<Plot> plotList = fetchAsync(plotService.findByIrrigationTime(dateTime));
         return GetPlotListResponse.builder().plots(
             PlotMapper.MAPPER.toGetPlotListResponse(plotList)
         ).build();
     }
 
-    private  Date timeToDateTime(LocalTime time) {
+    /**
+     * <p>Fetches async result in a safe manner.</p>
+     * @param future future object
+     * @return Result wrapped by future object
+     * @param <T> Generic type
+     * @throws AsynchronousError that is caught by controller advisor.
+     */
+    <T> T fetchAsync(CompletableFuture<T> future) {
         try {
-            return TIME_FORMTTER.parse(
+            return future.get();
+        } catch (ExecutionException exception) {
+            log.error("Execution error occurred while fetching Future result", exception);
+
+            Throwable cause = exception.getCause();
+
+            if(cause instanceof ApplicationError) {
+                throw (ApplicationError) cause;
+            }
+
+            throw new AsynchronousError(cause);
+        } catch(InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            log.error("A problem occurred in thread scheduler while fetching Future result", exception);
+
+            throw new AsynchronousError(exception);
+        }
+    }
+
+     Date timeToDateTime(LocalTime time) {
+        try {
+            return timeFormatter.parse(
                 String.format("1970-01-01 0%2d:%02d:%02d",
                         time.getHour(),
                         time.getMinute(),

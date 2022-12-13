@@ -6,17 +6,16 @@ import com.andela.irrigation.model.Plot;
 import com.andela.irrigation.repository.PlotRepository;
 import com.andela.irrigation.service.NonExistingEntityError;
 import com.andela.irrigation.service.PlotService;
-import com.andela.irrigation.service.ServiceException;
+import com.andela.irrigation.ApplicationError;
 import com.andela.irrigation.service.ValidationError;
 import com.andela.irrigation.service.ConflictError;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
+import org.springframework.scheduling.annotation.Async;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 
 /**
@@ -45,7 +44,7 @@ public class PlotServiceImpl implements PlotService {
      * @return Same argument.
      * @throws ValidationError <code>if StringUtils.isBlank(plot.name) == true || area.doubleValue() < -1.0d</code>.
      */
-    Plot expectsValidNewPlot(Plot plot) throws  ValidationError {
+    Plot expectsValidPlotForInsert(Plot plot) throws  ValidationError {
         boolean duplicatedName = false;
         Map<String, FieldError> errorMap = new HashMap<>();
 
@@ -71,7 +70,7 @@ public class PlotServiceImpl implements PlotService {
      * @return Same argument.
      * @throws ValidationError <code>if StringUtils.isBlank(plot.name) == true || area.doubleValue() < -1.0d</code>.
      */
-    Plot expectsValidUpdatedPlot(Plot plot) throws  ValidationError {
+    Plot expectsValidPlotForUpdate(Plot plot) throws  ValidationError {
         boolean duplicatedName = false;
         Map<String, FieldError> errorMap = new HashMap<>();
 
@@ -109,46 +108,58 @@ public class PlotServiceImpl implements PlotService {
      * {@inheritDoc}
      */
     @Override
-    public Plot create(Plot plot) throws ServiceException {
-        Plot validPlot = expectsValidNewPlot(plot);
-        return plotRepository.save(validPlot);
+    @Async("asyncExecutor")
+    public CompletableFuture<Plot> create(Plot plot) throws ApplicationError {
+        Plot validPlot = expectsValidPlotForInsert(plot);
+        return CompletableFuture.completedFuture(plotRepository.save(validPlot));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Plot findOrFail(Long id) throws ServiceException {
-        return plotRepository.findById(id).orElseThrow(PlotServiceImpl::nonExistingEntityError);
+    @Async("asyncExecutor")
+    public CompletableFuture<Plot> findOrFail(Long id) throws ApplicationError {
+        return CompletableFuture.completedFuture(
+                plotRepository.findById(id).orElseThrow(PlotServiceImpl::nonExistingEntityError)
+        );
     }
-
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void delete(Long plotId) throws ServiceException {
+    @Async("asyncExecutor")
+    public CompletableFuture<Plot> delete(Long plotId) throws ApplicationError {
         Plot plot = plotRepository.findById(plotId).orElseThrow(PlotServiceImpl::nonExistingEntityError);
         plotRepository.delete(plot);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Plot update(Plot plot) throws ServiceException {
-        plotRepository
-            .findById(plot.plotId)
-            .orElseThrow(PlotServiceImpl::nonExistingEntityError);
-
-        return plotRepository.save(expectsValidUpdatedPlot(plot));
+        return CompletableFuture.completedFuture(plot);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Plot> findByIrrigationTime(Date time) throws ServiceException {
-        return plotRepository.findPlotByTime(time);
+    @Async("asyncExecutor")
+    public CompletableFuture<Plot> update(Plot plot) throws ApplicationError {
+        Optional<Plot> retrievedPlot = plotRepository.findById(plot.plotId);
+
+        if(retrievedPlot.isEmpty()) {
+            throw nonExistingEntityError();
+        }
+
+        Plot updatedPlot = plotRepository.save(expectsValidPlotForUpdate(plot));
+        return CompletableFuture.completedFuture(updatedPlot);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+
+    @Override
+    @Async("asyncExecutor")
+    public CompletableFuture<List<Plot>> findByIrrigationTime(Date time) throws ApplicationError {
+        return CompletableFuture.completedFuture(plotRepository.findPlotByTime(time));
     }
 
     static NonExistingEntityError nonExistingEntityError() {

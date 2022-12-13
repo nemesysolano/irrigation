@@ -1,7 +1,5 @@
 package com.andela.irrigation.model;
 
-import java.math.BigDecimal;
-import java.sql.Time;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
