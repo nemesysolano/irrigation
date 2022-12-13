@@ -4,7 +4,7 @@ import com.andela.irrigation.ApplicationError;
 import com.andela.irrigation.ApplicationErrorCode;
 
 /**
- * Wrapper for checked exceptions that thrown by controller methods that depend on asynchronous services.
+ * Wrapper for checked exceptions that thrown by controller methods that dep services.
  */
 
 public class AsynchronousError extends ApplicationError {
