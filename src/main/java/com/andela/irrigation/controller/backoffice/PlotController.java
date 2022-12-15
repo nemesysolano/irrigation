@@ -1,30 +1,25 @@
-package com.andela.irrigation.controller;
+package com.andela.irrigation.controller.backoffice;
 
-import com.andela.irrigation.ApplicationError;
-import com.andela.irrigation.dto.*;
-import com.andela.irrigation.model.Plot;
-import com.andela.irrigation.service.PlotService;
+import com.andela.irrigation.AsyncUtils;
+import com.andela.irrigation.controller.BaseController;
+import com.andela.irrigation.dto.backoffice.*;
+import com.andela.irrigation.model.backoffice.Plot;
+import com.andela.irrigation.service.backoffice.PlotService;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import org.mapstruct.factory.Mappers;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.util.Date;
+
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
- * <p>REST Interface to <code>com.andela.irrigation.service.PlotService</code> service.</p>
+ * <p>REST Interface to <code>com.andela.irrigation.service.backoffice.PlotService</code> service.</p>
  */
 @RestController
-@RequestMapping("plot")
+@RequestMapping("backoffice/plot")
 @CrossOrigin(origins = "*", maxAge=3600, methods={
         RequestMethod.GET,
         RequestMethod.POST,
@@ -34,8 +29,7 @@ import java.util.concurrent.ExecutionException;
         RequestMethod.OPTIONS
 })
 @Slf4j
-public class PlotController {
-    private final SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+public class PlotController extends BaseController {
     /**
      * <p>Mapper that converts DTOs into Plot instances.</p>
      */
@@ -113,9 +107,15 @@ public class PlotController {
     @ResponseStatus(HttpStatus.CREATED)
     public CreatePlotResponse post(@RequestBody CreatePlotRequest request) {
         Plot plot = PlotMapper.MAPPER.toPlot(request);
-        return PlotMapper.MAPPER.toCreateResponse(fetchAsync(plotService.create(plot)));
+        return PlotMapper.MAPPER.toCreateResponse(AsyncUtils.fetchAsync(plotService.create(plot)));
     }
 
+    /**
+     *  <p>Updates an existing plot entity</p>
+     * @param request
+     * @param plotId
+     * @return
+     */
     @PutMapping("{plotId}")
     @ResponseStatus(HttpStatus.OK)
     public UpdatePlotResponse put(@RequestBody UpdatePlotRequest request, @PathVariable Long plotId) {
@@ -124,7 +124,7 @@ public class PlotController {
             .toBuilder()
             .plotId(plotId)
             .build();
-        return PlotMapper.MAPPER.toUpdateResponse(fetchAsync(plotService.update(plot)));
+        return PlotMapper.MAPPER.toUpdateResponse(AsyncUtils.fetchAsync(plotService.update(plot)));
     }
 
     /**
@@ -134,7 +134,7 @@ public class PlotController {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        fetchAsync(plotService.delete(id));
+        AsyncUtils.fetchAsync(plotService.delete(id));
     }
 
     /**
@@ -144,60 +144,6 @@ public class PlotController {
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public GetPlotResponse get(@PathVariable Long id) {
-        return PlotMapper.MAPPER.toGetResponse(fetchAsync(plotService.findOrFail(id)));
-    }
-
-    @GetMapping("ready/{time}")
-    @ResponseStatus(HttpStatus.OK)
-    public GetPlotListResponse ready(
-            @PathVariable("time") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime time
-    ) {
-        Date dateTime = timeToDateTime(time);
-
-        List<Plot> plotList = fetchAsync(plotService.findByIrrigationTime(dateTime));
-        return GetPlotListResponse.builder().plots(
-            PlotMapper.MAPPER.toGetPlotListResponse(plotList)
-        ).build();
-    }
-
-    /**
-     * <p>Fetches async result in a safe manner.</p>
-     * @param future future object
-     * @return Result wrapped by future object
-     * @param <T> Generic type
-     * @throws AsynchronousError that is caught by controller advisor.
-     */
-    <T> T fetchAsync(CompletableFuture<T> future) {
-        try {
-            return future.get();
-        } catch (ExecutionException exception) {
-            log.error("Execution error occurred while fetching Future result", exception);
-
-            Throwable cause = exception.getCause();
-
-            if(cause instanceof ApplicationError) {
-                throw (ApplicationError) cause;
-            }
-
-            throw new AsynchronousError(cause);
-        } catch(InterruptedException exception) {
-            Thread.currentThread().interrupt();
-            log.error("A problem occurred in thread scheduler while fetching Future result", exception);
-
-            throw new AsynchronousError(exception);
-        }
-    }
-
-     Date timeToDateTime(LocalTime time) {
-        try {
-            return timeFormatter.parse(
-                String.format("1970-01-01 0%2d:%02d:%02d",
-                        time.getHour(),
-                        time.getMinute(),
-                        time.getSecond()
-                ));
-        } catch (ParseException e) {
-            return null;
-        }
+        return PlotMapper.MAPPER.toGetResponse(AsyncUtils.fetchAsync(plotService.findOrFail(id)));
     }
 }

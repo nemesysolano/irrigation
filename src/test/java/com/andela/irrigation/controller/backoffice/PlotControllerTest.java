@@ -1,7 +1,7 @@
-package com.andela.irrigation.controller;
+package com.andela.irrigation.controller.backoffice;
 
 import com.andela.irrigation.BaseTestSetup;
-import com.andela.irrigation.dto.*;
+import com.andela.irrigation.dto.backoffice.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
-import static com.andela.irrigation.service.PlotService.MAX_PLOT_NAME_LENGTH;
+import static com.andela.irrigation.service.backoffice.PlotService.MAX_PLOT_NAME_LENGTH;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -40,7 +40,7 @@ class PlotControllerTest extends BaseTestSetup {
             .time(new Date(System.currentTimeMillis()))
             .build();
 
-        createPlotResponse = post("/plot",
+        createPlotResponse = post("/backoffice/plot",
             createPlotRequest,
             CreatePlotResponse.class,
             MockMvcResultMatchers.status().isCreated(),
@@ -58,7 +58,7 @@ class PlotControllerTest extends BaseTestSetup {
 
         /* Retrieves the post */
         GetPlotResponse getResponse = get(
-            "/plot/" + createPlotResponse.plotId,
+            "/backoffice/plot/" + createPlotResponse.plotId,
             GetPlotResponse.class,
             MockMvcResultMatchers.status().isOk(),
             Map.of()
@@ -71,7 +71,7 @@ class PlotControllerTest extends BaseTestSetup {
     @Test
     @Order(2)
     void testUpdate() throws Exception {
-        String url ="/plot/" + createPlotResponse.plotId;
+        String url ="/backoffice/plot/" + createPlotResponse.plotId;
 
         /* Retrieves the post */
         GetPlotResponse getResponse = get(
@@ -115,7 +115,7 @@ class PlotControllerTest extends BaseTestSetup {
          *  1. Name is not empty.
          *  2. Area greater than 1.
          */
-        ErrorResponse response = post("/plot",
+        ErrorResponse response = post("/backoffice/plot",
                 CreatePlotRequest
                         .builder()
                         .area(BigDecimal.ZERO)
@@ -135,7 +135,7 @@ class PlotControllerTest extends BaseTestSetup {
          * Validates:
          *  1. Name length is less than MAX_PLOT_NAME_LENGTH
          */
-        response = post("/plot",
+        response = post("/backoffice/plot",
                 CreatePlotRequest
                         .builder()
                         .area(BigDecimal.ONE)
@@ -155,7 +155,7 @@ class PlotControllerTest extends BaseTestSetup {
         * 1. Can't duplicate names.
         */
 
-        post("/plot",
+        post("/backoffice/plot",
             CreatePlotRequest
                     .builder()
                     .area(BigDecimal.TEN)
@@ -167,7 +167,7 @@ class PlotControllerTest extends BaseTestSetup {
         );
 
         put(
-            "/plot/" + createPlotResponse.plotId,
+            "/backoffice/plot/" + createPlotResponse.plotId,
             UpdatePlotRequest.builder().name(CONFLICTING_NAME).area(createPlotResponse.area).build(),
             UpdatePlotResponse.class,
             MockMvcResultMatchers.status().isConflict(),
@@ -175,29 +175,16 @@ class PlotControllerTest extends BaseTestSetup {
         );
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"12:00:00",  "13:00:00", "14:00:00", "15:00:00"})
-    @Order(5)
-    void testReady(String time) throws Exception {
-        GetPlotListResponse response =  get(
-            "/plot/ready/" + time,
-            GetPlotListResponse.class,
-            MockMvcResultMatchers.status().isOk(),
-            Map.of()
-        );
-
-        assertTrue(response.plots.size() > 0);
-    }
     @AfterAll
     public void cleanup() throws Exception {
         /* Deletes the plot */
-        delete("/plot/" + createPlotResponse.plotId, MockMvcResultMatchers.status().isNoContent(), Map.of());
+        delete("/backoffice/plot/" + createPlotResponse.plotId, MockMvcResultMatchers.status().isNoContent(), Map.of());
 
         /*
          * Confirms that the plot was deleted
          */
         get(
-            "/plot/" + createPlotResponse.plotId,
+            "/backoffice/plot/" + createPlotResponse.plotId,
             GetPlotResponse.class,
             MockMvcResultMatchers.status().isNotFound(),
             Map.of()

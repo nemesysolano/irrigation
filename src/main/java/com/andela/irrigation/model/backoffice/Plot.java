@@ -1,4 +1,4 @@
-package com.andela.irrigation.model;
+package com.andela.irrigation.model.backoffice;
 
 import java.math.BigDecimal;
 import java.util.Date;

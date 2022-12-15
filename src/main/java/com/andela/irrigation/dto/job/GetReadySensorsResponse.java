@@ -1,4 +1,4 @@
-package com.andela.irrigation.dto;
+package com.andela.irrigation.dto.job;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -8,11 +8,8 @@ import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.Map;
+import java.util.List;
 
-/**
- * DTO that encapsulates error information sent to the client
- */
 @Jacksonized
 @Builder(toBuilder=true)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,19 +17,6 @@ import java.util.Map;
 @ToString
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE, force = true)
 @FieldNameConstants
-public class ErrorResponse {
-    /**
-     * Error map whose keys and values are respectively field names and error messages.
-     */
-    public final Map<String, String> errorMap;
-
-    /**
-     * Error code
-     */
-    public final int code;
-
-    /**
-     * Summary message.
-     */
-    public final String message;
+public class GetReadySensorsResponse {
+    public final List<Long> sensorIdList;
 }

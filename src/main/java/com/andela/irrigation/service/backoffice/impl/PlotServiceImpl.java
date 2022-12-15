@@ -1,16 +1,14 @@
-package com.andela.irrigation.service.impl;
+package com.andela.irrigation.service.backoffice.impl;
 
 
 import com.andela.irrigation.model.FieldError;
-import com.andela.irrigation.model.Plot;
-import com.andela.irrigation.repository.PlotRepository;
+import com.andela.irrigation.model.backoffice.Plot;
+import com.andela.irrigation.repository.backoffice.PlotRepository;
 import com.andela.irrigation.service.NonExistingEntityError;
-import com.andela.irrigation.service.PlotService;
-import com.andela.irrigation.ApplicationError;
+import com.andela.irrigation.service.backoffice.PlotService;
 import com.andela.irrigation.service.ValidationError;
 import com.andela.irrigation.service.ConflictError;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Async;
 import java.math.BigDecimal;
@@ -109,7 +107,7 @@ public class PlotServiceImpl implements PlotService {
      */
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<Plot> create(Plot plot) throws ApplicationError {
+    public CompletableFuture<Plot> create(Plot plot) {
         Plot validPlot = expectsValidPlotForInsert(plot);
         return CompletableFuture.completedFuture(plotRepository.save(validPlot));
     }
@@ -119,7 +117,7 @@ public class PlotServiceImpl implements PlotService {
      */
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<Plot> findOrFail(Long id) throws ApplicationError {
+    public CompletableFuture<Plot> findOrFail(Long id) {
         return CompletableFuture.completedFuture(
                 plotRepository.findById(id).orElseThrow(PlotServiceImpl::nonExistingEntityError)
         );
@@ -130,7 +128,7 @@ public class PlotServiceImpl implements PlotService {
      */
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<Plot> delete(Long plotId) throws ApplicationError {
+    public CompletableFuture<Plot> delete(Long plotId) {
         Plot plot = plotRepository.findById(plotId).orElseThrow(PlotServiceImpl::nonExistingEntityError);
         plotRepository.delete(plot);
         return CompletableFuture.completedFuture(plot);
@@ -141,7 +139,7 @@ public class PlotServiceImpl implements PlotService {
      */
     @Override
     @Async("asyncExecutor")
-    public CompletableFuture<Plot> update(Plot plot) throws ApplicationError {
+    public CompletableFuture<Plot> update(Plot plot) {
         Optional<Plot> retrievedPlot = plotRepository.findById(plot.plotId);
 
         if(retrievedPlot.isEmpty()) {
@@ -152,15 +150,6 @@ public class PlotServiceImpl implements PlotService {
         return CompletableFuture.completedFuture(updatedPlot);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-
-    @Override
-    @Async("asyncExecutor")
-    public CompletableFuture<List<Plot>> findByIrrigationTime(Date time) throws ApplicationError {
-        return CompletableFuture.completedFuture(plotRepository.findPlotByTime(time));
-    }
 
     static NonExistingEntityError nonExistingEntityError() {
         return new NonExistingEntityError(Plot.class.getSimpleName());

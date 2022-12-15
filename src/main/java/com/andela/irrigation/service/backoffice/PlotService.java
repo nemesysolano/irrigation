@@ -1,7 +1,7 @@
-package com.andela.irrigation.service;
+package com.andela.irrigation.service.backoffice;
 
 import com.andela.irrigation.ApplicationError;
-import com.andela.irrigation.model.Plot;
+import com.andela.irrigation.model.backoffice.Plot;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +23,7 @@ public interface PlotService {
      * @return A new plot record containing argument's fields with new id.
      * @throws ApplicationError Reports data integrity violations or system problems.
      */
-    CompletableFuture<Plot> create(Plot plot) throws ApplicationError;
+    CompletableFuture<Plot> create(Plot plot);
 
 
     /**
@@ -32,7 +32,7 @@ public interface PlotService {
      * @return The plot instance identified by <code>id</code> argument.
      * @throws ApplicationError If the no instance with the given id exists
      */
-    CompletableFuture<Plot> findOrFail(Long id) throws ApplicationError;
+    CompletableFuture<Plot> findOrFail(Long id);
 
     /**
      * <p>Deletes a plot entity from database</p>
@@ -40,20 +40,14 @@ public interface PlotService {
      * @return The deleted plot instance
      * @throws ApplicationError Reports data integrity violations or system problems.
      */
-    CompletableFuture<Plot> delete(Long id) throws ApplicationError;
+    CompletableFuture<Plot> delete(Long id);
 
     /**
      * <p>Updates an existing plot</p>
      * @param plot A plot instance whose <p>id</p> property matches a plot record in database.
      * @return Same instance passed as argument.
      */
-    CompletableFuture<Plot> update(Plot plot) throws ApplicationError;
+    CompletableFuture<Plot> update(Plot plot);
 
-    /**
-     * <p>Finds all plots ready for irrigation</p>
-     * @param time Expected irrigation time
-     * @return A list of plots
-     */
 
-    CompletableFuture<List<Plot>> findByIrrigationTime(Date time) throws ApplicationError;
 }

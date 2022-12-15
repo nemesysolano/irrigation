@@ -1,4 +1,4 @@
-package com.andela.irrigation.dto;
+package com.andela.irrigation.dto.backoffice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,9 @@ import lombok.extern.jackson.Jacksonized;
 import java.math.BigDecimal;
 import java.util.Date;
 
+
 /**
- * DTO Object used to update new plots of land.
+ * This DTO contains information for a single plot of land.
  */
 @Jacksonized
 @Builder(toBuilder=true)
@@ -21,14 +22,19 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE, force = true)
 @FieldNameConstants
-public class UpdatePlotRequest {
+public class GetPlotResponse {
+    /**
+     * * <p>Unique plot identifier.</p>
+     */
+    public final Long plotId;
+
     /**
      * <p>Plot size in acres.</p>
      */
     public final BigDecimal area;
 
     /**
-     * <p>Plot name for easy search in database (mut be unique)</p>
+     * <p>Plot name for easy search in database (mut be unique).</p>
      */
     public final String name;
     /**
@@ -40,5 +46,5 @@ public class UpdatePlotRequest {
      * Irrigation time
      */
     public final Date time;
-}
 
+}

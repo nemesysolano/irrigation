@@ -1,4 +1,4 @@
-package com.andela.irrigation.dto;
+package com.andela.irrigation.dto.backoffice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.andela.irrigation.controller;
 
-import com.andela.irrigation.dto.ErrorResponse;
+import com.andela.irrigation.dto.backoffice.ErrorResponse;
 import com.andela.irrigation.service.NonExistingEntityError;
 import com.andela.irrigation.ApplicationError;
 import com.andela.irrigation.service.ValidationError;
